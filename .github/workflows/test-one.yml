@@ -76,25 +76,6 @@ jobs:
           (cd runtime && ./build.sh)
           (cd rom/dev && ./build.sh)
 
-      - name: Build with OpenSSL
-        run: |
-          for proj in caliptra-auth-manifest-app caliptra-builder caliptra-image-crypto caliptra-image-app; do
-            cargo build -p $proj --locked --no-default-features --features openssl
-          done
-
-      - name: Build with RustCrypto
-        run: |
-          for proj in caliptra-auth-manifest-app caliptra-builder caliptra-image-crypto caliptra-image-app; do
-            cargo build -p $proj --locked --no-default-features --features rustcrypto
-          done
-
-      - name: Build hw-model with fpga_realtime, fpga_subsystem, itrng, coverage
-        run: |
-          for feature in fpga_realtime fpga_subsystem itrng coverage; do
-            echo "Building with $feature"
-            cargo build --locked --features $feature
-          done
-
       # Clippy needs to build crates as part of the check, so do it after the
       # build.
       - name: Clippy lint check
@@ -129,7 +110,7 @@ jobs:
 
       - name: Run tests
         run: |
-          CPTRA_COVERAGE_PATH=/tmp cargo --config "$EXTRA_CARGO_CONFIG" test --locked -p caliptra_runtime test_sign_with_exported_cdi_warm_reset_parent
+          CPTRA_COVERAGE_PATH=/tmp cargo --config "$EXTRA_CARGO_CONFIG" test --locked -p caliptra-runtime test_sign_with_exported_cdi_warm_reset_parent
           CPTRA_COVERAGE_PATH=/tmp cargo --config "$EXTRA_CARGO_CONFIG" run --manifest-path ./coverage/Cargo.toml
 
           CARGO_TARGET_DIR=target cargo --config "$EXTRA_CARGO_CONFIG" test --locked --manifest-path ci-tools/fpga-boss/Cargo.toml
