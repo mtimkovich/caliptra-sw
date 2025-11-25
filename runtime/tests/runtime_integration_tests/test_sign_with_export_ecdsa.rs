@@ -63,7 +63,7 @@ fn check_certificate_signature(
         &y,
     )
     .unwrap();
-    println!("derive context key failed");
+    println!("returned pub key failed");
     sig.verify(&TEST_DIGEST, &ec_pub_key).unwrap()
 }
 
